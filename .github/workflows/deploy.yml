@@ -3,7 +3,10 @@ name: Deploy to GitHub Pages
 on:
   push:
     branches:
-      - main  # or the branch you want to deploy from
+      - main  # Change this if you deploy from a different branch
+
+permissions:
+  contents: write  # This ensures GitHub Actions can push changes
 
 jobs:
   deploy:
@@ -13,9 +16,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Setup Git user
+        run: |
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+          git config --global user.name "github-actions[bot]"
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_branch: gh-pages  # The branch to which files will be deployed
-          publish_dir: ./         # Directory containing your static website files
+          github_token: ${{ secrets.GITHUB_TOKEN }}  # GitHub auto-generated token
+          publish_branch: gh-pages  # The branch for deployment
+          publish_dir: ./           # Directory containing your static site
+
